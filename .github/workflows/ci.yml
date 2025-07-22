@@ -29,3 +29,21 @@ jobs:
       # 4) Run it
       - name: Run HelloWorld
         run: java HelloWorld
+            # 5) Download the JUnit console launcher
+      - name: Download JUnit platform
+        run: |
+          curl -L -o junit-platform-console-standalone.jar \
+            https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.9.3/junit-platform-console-standalone-1.9.3.jar
+
+      # 6) Compile the test
+      - name: Compile HelloWorldTest
+        run: javac -cp .:junit-platform-console-standalone.jar HelloWorldTest.java
+
+      # 7) Run the test suite
+      - name: Run JUnit tests
+        run: java -jar junit-platform-console-standalone.jar \
+          --class-path . --scan-class-path
+
+        
+
+
