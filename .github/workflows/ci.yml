@@ -20,20 +20,24 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Compile HelloWorld
-        run: javac HelloWorld.java
-
-      - name: Run HelloWorld
-        run: java HelloWorld
-
-      - name: Download JUnit platform
+      # 1) Download JUnit Console Standalone
+      - name: Download JUnit console jar
         run: |
           curl -L -o junit-platform-console-standalone.jar \
             https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.9.3/junit-platform-console-standalone-1.9.3.jar
 
-      - name: Compile HelloWorldTest
-        run: javac -cp .:junit-platform-console-standalone.jar HelloWorldTest.java
+      # 2) Compile both source and test (needs the jar)
+      - name: Compile Java & Test
+        run: |
+          javac -cp junit-platform-console-standalone.jar HelloWorld.java HelloWorldTest.java
 
-      - name: Run JUnit tests
-        run: java -jar junit-platform-console-standalone.jar \
-          --class-path . --scan-class-path
+      # 3) Run the main
+      - name: Run HelloWorld
+        run: java HelloWorld
+
+      # 4) Run only your test class explicitly
+      - name: Run HelloWorldTest
+        run: |
+          java -jar junit-platform-console-standalone.jar \
+            --class-path . \
+            --select-class HelloWorldTest
